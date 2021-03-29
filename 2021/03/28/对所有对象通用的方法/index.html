@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang=ch>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>通用方法 | Hesai&#39;s Blog</title>
+  <meta name="description" content="对所有对象通用的方法Object是一个具体类，但设计它的主要目的是为了扩展。 Object中所有非final方法（equals,hashCode,toString,clone,finalize)都有明确的通用规定（general contract）因为他们被设计成要被覆盖的（override）。 在覆盖这些方法的时候都要遵守这些约定，否则无法与其他依赖于这些约定的类（HashMap,HashSet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通用方法">
+<meta property="og:url" content="http://example.com/2021/03/28/%E5%AF%B9%E6%89%80%E6%9C%89%E5%AF%B9%E8%B1%A1%E9%80%9A%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="Hesai&#39;s blog">
+<meta property="og:description" content="对所有对象通用的方法Object是一个具体类，但设计它的主要目的是为了扩展。 Object中所有非final方法（equals,hashCode,toString,clone,finalize)都有明确的通用规定（general contract）因为他们被设计成要被覆盖的（override）。 在覆盖这些方法的时候都要遵守这些约定，否则无法与其他依赖于这些约定的类（HashMap,HashSet">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-03-28T15:05:16.515Z">
+<meta property="article:modified_time" content="2021-03-28T15:40:42.831Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="tags">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://example.com/2021/03/28/%E5%AF%B9%E6%89%80%E6%9C%89%E5%AF%B9%E8%B1%A1%E9%80%9A%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hesai&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/hs-jose" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">hs</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/hs-jose" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>记录知识</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-%E2%85%A0/">Java核心技术 Ⅰ</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-%E2%85%A1/">Java核心技术 Ⅱ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E2%85%A0-%E6%B7%BB%E5%8A%A0%E5%8D%9A%E6%96%87%E5%88%86%E7%B1%BB/">Java核心技术Ⅰ# 添加博文分类</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E2%85%A1/">Java核心技术Ⅱ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/effective-Java/">effective Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/">深入理解JVM</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/tags/" rel="tag">tags</a><span class="tag-list-count">13</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/tags/" style="font-size: 13px;">tags</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/">深入理解JVM</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/" class="title">Java内存区域与内存溢出异常</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:25.905Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/">深入理解JVM</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/" class="title">垃圾收集器与内存分配策略</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:25.905Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/effective-Java/">effective Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%AF%B9%E6%89%80%E6%9C%89%E5%AF%B9%E8%B1%A1%E9%80%9A%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95/" class="title">通用方法</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:16.515Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/effective-Java/">effective Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/" class="title">创建和销毁对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:16.515Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E2%85%A0-%E6%B7%BB%E5%8A%A0%E5%8D%9A%E6%96%87%E5%88%86%E7%B1%BB/">Java核心技术Ⅰ# 添加博文分类</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%BC%82%E5%B8%B8%E3%80%81%E6%96%AD%E8%A8%80%E5%92%8C%E6%97%A5%E5%BF%97/" class="title">异常、断言和日志</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:01.868Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">Catalogue</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E6%89%80%E6%9C%89%E5%AF%B9%E8%B1%A1%E9%80%9A%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">对所有对象通用的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#10%E8%A6%86%E7%9B%96equals%E6%97%B6%E9%81%B5%E5%AE%88%E7%9A%84%E7%BA%A6%E5%AE%9A"><span class="toc-number">1.1.</span> <span class="toc-text">10覆盖equals时遵守的约定</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%95%E6%97%B6%E8%A6%86%E7%9B%96equals%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.1.</span> <span class="toc-text">何时覆盖equals方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A6%86%E7%9B%96equals%E6%96%B9%E6%B3%95%E7%9A%84%E9%80%9A%E7%94%A8%E8%A7%84%E5%AE%9A"><span class="toc-number">1.1.2.</span> <span class="toc-text">覆盖equals方法的通用规定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E9%AB%98%E8%B4%A8%E9%87%8Feuqals%E8%AF%80%E7%AA%8D"><span class="toc-number">1.1.3.</span> <span class="toc-text">实现高质量euqals诀窍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">1.1.4.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11%E8%A6%86%E7%9B%96equals%E6%97%B6%E6%80%BB%E8%A6%81%E8%A6%86%E7%9B%96hashCode"><span class="toc-number">1.2.</span> <span class="toc-text">11覆盖equals时总要覆盖hashCode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Object%E8%A7%84%E8%8C%83-hashCode%E7%BA%A6%E5%AE%9A"><span class="toc-number">1.2.1.</span> <span class="toc-text">Object规范 hashCode约定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0%E6%8A%80%E5%B7%A7"><span class="toc-number">1.2.2.</span> <span class="toc-text">散列函数技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12%E5%A7%8B%E7%BB%88%E8%A6%81%E8%A6%86%E7%9B%96toString"><span class="toc-number">1.3.</span> <span class="toc-text">12始终要覆盖toString</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13%E8%B0%A8%E6%85%8E%E8%A6%86%E7%9B%96clone"><span class="toc-number">1.4.</span> <span class="toc-text">13谨慎覆盖clone</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E8%A1%8C%E4%B8%BA%E8%89%AF%E5%A5%BD%E7%9A%84clone%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.1.</span> <span class="toc-text">如何实现一个行为良好的clone方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14%E8%80%83%E8%99%91%E5%AE%9E%E7%8E%B0Comparable"><span class="toc-number">1.5.</span> <span class="toc-text">14考虑实现Comparable</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-对所有对象通用的方法" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      通用方法
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/03/28/%E5%AF%B9%E6%89%80%E6%9C%89%E5%AF%B9%E8%B1%A1%E9%80%9A%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95/" class="article-date">
+	  <time datetime="2021-03-28T15:05:16.515Z" itemprop="datePublished">2021-03-28</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/effective-Java/">effective Java</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/tags/" rel="tag">tags</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/03/28/%E5%AF%B9%E6%89%80%E6%9C%89%E5%AF%B9%E8%B1%A1%E9%80%9A%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="对所有对象通用的方法"><a href="#对所有对象通用的方法" class="headerlink" title="对所有对象通用的方法"></a>对所有对象通用的方法</h1><p>Object是一个具体类，但设计它的主要目的是为了扩展。</p>
+<p>Object中所有非final方法（equals,hashCode,toString,clone,finalize)都有明确的通用规定（general contract）因为他们被设计成要被覆盖的（override）。</p>
+<p>在覆盖这些方法的时候都要遵守这些约定，否则无法与其他依赖于这些约定的类（HashMap,HashSet)一起正常工作。</p>
+<h2 id="10覆盖equals时遵守的约定"><a href="#10覆盖equals时遵守的约定" class="headerlink" title="10覆盖equals时遵守的约定"></a>10覆盖<code>equals</code>时遵守的约定</h2><p>不覆盖equals方法，类的每一个实例只与它自身相等。</p>
+<p>如果满足下列任意条件，就可以不覆盖equals方法</p>
+<ul>
+<li><p>类的每个实例本质上时唯一的</p>
+<ul>
+<li>对于代表活动实体而不是值（value）的类符合。如Thread。Object的<code>equals</code>方法就是正确行为</li>
+</ul>
+</li>
+<li><p>类没有必要提供“逻辑相等”（logical equality）的测试功能</p>
+<ul>
+<li>例如<code>java.util.regex.Pattern</code>可以覆盖equals，已检查两个Patterns实例是否代表同一个正则表达式，但设计者不认为用户需要或期望这样的功能。这种情况从Object继承得到的equals即可</li>
+</ul>
+</li>
+<li><p>超类已经覆盖equals，超类的行为对这个类也合适</p>
+<ul>
+<li>例如<ul>
+<li>多数Set都从<code>AbstractSet</code>继承equals实现，</li>
+<li>List实现从<code>AbstractList</code>继承equals实现，</li>
+<li>Map从<code>AbstractMap</code>继承实现</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>类是私有的，或包级私有。可以确定它的equals方法永远不会被调用</p>
+<ul>
+<li><p>如果非常想规避风险可以覆盖equals方法以确保它不会被调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span></span>&#123;</span><br><span class="line">	<span class="keyword">throw</span> <span class="keyword">new</span> AssertionError();<span class="comment">//method never called</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="何时覆盖equals方法"><a href="#何时覆盖equals方法" class="headerlink" title="何时覆盖equals方法"></a>何时覆盖<code>equals</code>方法</h3><ul>
+<li>类具有自己特有的“逻辑相等”（logical equality）概念（不等同于对像等同）</li>
+<li>超类没有覆盖<code>equals</code></li>
+</ul>
+<p>通常属于值类情形</p>
+<blockquote>
+<p>值类 仅是一个表示值的类 例如String Integer</p>
+</blockquote>
+<p>此时利用equals方法来比较来比较值的对象是否相时（逻辑上是否相等，而不是是否指向同一个对象）。</p>
+<p>不仅需要需要覆盖equals方法，而且这样做也<strong>使得这个类的实例可以被用作映射表（map）的键（key），或集合（set）的元素，是映射和集合表现出预期行为</strong></p>
+<h3 id="覆盖equals方法的通用规定"><a href="#覆盖equals方法的通用规定" class="headerlink" title="覆盖equals方法的通用规定"></a>覆盖equals方法的通用规定</h3><blockquote>
+<p>来自Object规范</p>
+</blockquote>
+<p>equals方法实现等价关系（equivalence relation）</p>
+<ul>
+<li>自反性（reflexive）</li>
+<li>对称性（symmetric）</li>
+<li>传递性（transitive）</li>
+<li>一致性（consistent）</li>
+<li>对任意<strong>非null</strong>的引用值x，<code>x.equals(null);</code>必须返回<strong>false</strong></li>
+</ul>
+<h3 id="实现高质量euqals诀窍"><a href="#实现高质量euqals诀窍" class="headerlink" title="实现高质量euqals诀窍"></a>实现高质量euqals诀窍</h3><ol>
+<li>使用==操作符检查<strong>“参数是否为这个对象的引用”</strong></li>
+<li>使用instanceof操作费检查<strong>“参数是否为正确类型”</strong></li>
+<li>把参数转换成正确类型</li>
+<li>对于类中每一个关键域，检查参数中的域是否与该对象对应的域相匹配</li>
+</ol>
+<p>注意</p>
+<blockquote>
+<ul>
+<li>覆盖equals总要覆盖hashcode</li>
+<li>不要试图让equals方法过于智能</li>
+<li>不要将equals声明中的Object 对象替换为其他类型</li>
+</ul>
+</blockquote>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>编写测试equals、hashcode方法十分繁琐，使用Google的开源框架AutoValue框架，自动生成这些方法。（IDE也可实现这样的功能）</p>
+<p>总之不要轻易覆盖equals方法。多数情况下，从Object继承的方法即可使用。</p>
+<p>覆盖equals一定要比较这个类所有关键域，并查看是否遵守equals的5个条款</p>
+<h2 id="11覆盖equals时总要覆盖hashCode"><a href="#11覆盖equals时总要覆盖hashCode" class="headerlink" title="11覆盖equals时总要覆盖hashCode"></a>11覆盖<code>equals</code>时总要覆盖<code>hashCode</code></h2><p>违反这个约定的类，无法结合所有基于散列的集合一起正常工作（HashSet、HashMap）。</p>
+<h3 id="Object规范-hashCode约定"><a href="#Object规范-hashCode约定" class="headerlink" title="Object规范 hashCode约定"></a>Object规范 hashCode约定</h3><ul>
+<li>应用程序执行期间，对象的equals方法返回的的结果没有被修改，同一个对象调用多次，hashCode方法必须都返回同一个值。在一个应用程序和另一个程序执行过程中hashCode方法返回的值可以不一致</li>
+<li>两个对象根据equals(Object)方法比较一致，这两个对象的hashCode产生整数结果必须相同</li>
+<li>两个对象根据equals(Object)方法比较不一致，这两个对象的hashCode产生整数结果不必要不相同（但是尽量不同能提高散列表性能</li>
+</ul>
+<p><strong>相等的对象必须具有相等的散列码</strong></p>
+<p>没有覆盖hashCode而违反的关键约定是第二条：相等的对象必须有相同散列码</p>
+<p>例如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;PhoneNumber,String&gt; m = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">m.put(<span class="keyword">new</span> PhoneNumber(<span class="number">123123</span>),<span class="string">&quot;hs&quot;</span>);</span><br><span class="line">m.get(<span class="keyword">new</span> PhoneNumber(<span class="number">123123</span>))<span class="comment">//null</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="散列函数技巧"><a href="#散列函数技巧" class="headerlink" title="散列函数技巧"></a>散列函数技巧</h3><p>好的散列函数倾向于<strong>“为不同对象产生不相等散列码”</strong>（约定3）理想情况下，散列函数应把集合中不相等实例均匀分布到可能的int值上。</p>
+<ol>
+<li>声明一个int变量命名为result，初始化为对象中第一个关键域的散列码<strong>c</strong>。如步骤2所示</li>
+<li>对象中剩下的每一个关键域<strong>f</strong>都完成如下<ul>
+<li>为该域计算interesting类型散列码<strong>c</strong><ul>
+<li>如果该域为基本类型，计算<code>Type.hashCode(f)</code>,基本装箱类与<strong>f</strong>类型相对</li>
+<li>该域是一个对象引用，且该类的equals方法通过递归调用equals的方法来比较这个域，则同样为这个域递归调用hashCode。更复杂的比较，则为这个域计算一个范式（canonical representation），然后针对这个范式调用hashCode。如果这个域值为null，返回0（常数)</li>
+<li>如果该域是一个数组，需要每一个元素当作单独的域来处理。即利用上述规则，对每个重要元素计算一个散列码。然后根据2.2组合散列码。没有重要元素，可以使用常量（最好不要是0）。如果数组中元素都很重要，可以使用<code>Arrays.hashCode</code></li>
+</ul>
+</li>
+<li>按照<code>result = 31 * result + c</code>将2.1中计算的散列码c组合到result中</li>
+</ul>
+</li>
+<li>返回result</li>
+</ol>
+<p>完成hashCode编写后一定要注意<strong>相等实例是否都有相同散列码</strong></p>
+<blockquote>
+<p>步骤2.2中的乘法部分使得散列值依赖域的顺序，一个类包含多个相似的域，这样的运算会产生一个会产生更好的散列函数</p>
+<p>×31 ：31是一个奇素数。如果乘数是偶数，并且乘法溢出，信息会丢失，乘2等价于移位。习惯上使用素数来计算散列结果</p>
+<p>31特性： <code>31*i==(i&lt;&lt;5)-1</code>现代虚拟机自动完成这种优化</p>
+</blockquote>
+<p>按上述方法实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result = Short.hashCode(areaCode);</span><br><span class="line">	result+=<span class="number">31</span>*result+Short.hashCode(prefix);</span><br><span class="line">	result+=<span class="number">31</span>*result+Short.hashCode(lineNum);</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Object类静态方法，带有任意数量对象，并为他们返回一个散列码。<code>hash</code></p>
+<p>运行速度较慢。因为 传入可变参数引发数组创建，基本类型装箱拆箱</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> 	Object.hash(lineNum,prefix,areaCode);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不可变类，可以把散列码缓存在内部。</p>
+<ul>
+<li>这类对象多数用做散列键，应在创建实例时计算散列码</li>
+<li>否则可选择懒加载</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result = hashCode;</span><br><span class="line">	<span class="keyword">if</span>(result==<span class="number">0</span>)&#123;</span><br><span class="line">        result=Short.hashCode(areaCode);</span><br><span class="line">        result+=<span class="number">31</span>*result+Short.hashCode(prefix);</span><br><span class="line">        result+=<span class="number">31</span>*result+Short.hashCode(lineNum);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>不要试图从散列码中排除一个对象的关键域来提高性能</strong>，这样会导致散列函数性能下降（映射到少数散列码）</p>
+<p>不要对hashCode方法返回值做成具体的规定，因此客户端无法理所当然的依赖它，这样可以为修改提供灵活性。</p>
+<h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><p>覆盖equals必须覆盖hashCode，否则程序无法正常运行。hashCode必须遵守Object规定的通用规约，并完成一定工作。</p>
+<p>AutoValue框架提供自动生成（IDE也有）</p>
+<h2 id="12始终要覆盖toString"><a href="#12始终要覆盖toString" class="headerlink" title="12始终要覆盖toString"></a>12始终要覆盖<code>toString</code></h2><p>Object提供的toString方法的一个实现。</p>
+<p>返回的字符串  <strong>类的名称+“@”+散列码的无符号16进制表示法</strong></p>
+<p><u><code>toString</code></u>通用规约指出</p>
+<ul>
+<li>返回的字符串应该是<strong>”简洁但信息丰富，且易于阅读的表达形式“</strong></li>
+<li>建议所有子类都覆盖这个方法</li>
+</ul>
+<p>好的toString实现可以使类用起来更加舒适，更易于调试。</p>
+<p>当对象传递给printf、println、字符串串联符（+）、assert等，toString会自动调用。打印出错信息更清晰</p>
+<p>实际使用中，toString方法应返回对象中的<strong>所有</strong>值得关注信息</p>
+<p>使用toString时必须确定是否在文档中指定返回值的格式。。对于值类（电话号码类，矩阵类）建议这么做。</p>
+<ul>
+<li><p>指定格式的好处是，它可以用作一种标准、明确、易读的的对象表示法（CSV）</p>
+<p>如果指定了格式，最好再提供一个相匹配的静态工厂或构造器，便于再对象和字符串表示法之间转换（BigInteger、BigDecimal、多数基本包装类)</p>
+</li>
+<li><p>不足，如果这个类已经被广泛使用，一旦指定格式，就必须始终如一。</p>
+</li>
+</ul>
+<p>无论指定什么格式（或不指定）</p>
+<ul>
+<li>都必须再文档中表明意图</li>
+<li>都为toString返回值中包含的所有信息提供一种可通过编程访问的途径</li>
+</ul>
+<ul>
+<li><p>在静态工具类中编写toString没有意义（tip 4）</p>
+</li>
+<li><p>多数枚举类中不需要编写toString</p>
+</li>
+<li><p>可以使用AutoValue工具自动生成toString（但是不特定于该类的意义，比如不适合PhoneNumber类）Point类比较适合这种方法</p>
+</li>
+</ul>
+<h2 id="13谨慎覆盖clone"><a href="#13谨慎覆盖clone" class="headerlink" title="13谨慎覆盖clone"></a>13谨慎覆盖clone</h2><p><code>Cloneable</code>接口的目的是作为对象的一个mixin接口（mixin interface）tip20，表明这样的对象可以克隆。</p>
+<p>其主要缺陷在于缺少一个clone方法，而Object的clone方法是protected的。如果不借助反射，即使实现Cloneable也不能直接调用clone方法</p>
+<p>即使使用反射也不一定保证调用成功，因为不能保证队形一定具有可访问的clone方法。</p>
+<p><code>Cloneable</code>接口决定Object中受保护的clone方法实现的行为：<strong>如果一个类实现了<code>Cloneable</code>，Object的clone方法就应该返回该对象的逐域拷贝</strong>，否则会抛出CloneNotSupportedException异常。（极端非典型用法）</p>
+<h3 id="如何实现一个行为良好的clone方法"><a href="#如何实现一个行为良好的clone方法" class="headerlink" title="如何实现一个行为良好的clone方法"></a>如何实现一个行为良好的<code>clone</code>方法</h3><p>实现<code>Cloneable</code>接口的类是为了提供一个功能适当的<strong>公有</strong>clone方法。（无需构造器就可创建对象）</p>
+<p>Object中clone方法的通用约定</p>
+<ul>
+<li><p>创建返回该对象的一个拷贝（拷贝的精确含义取决于该对象的类）一般如下</p>
+</li>
+<li><p><code>x.clone()!=x</code>结果为true</p>
+</li>
+<li><p><code>x.clone().getClass()==x.getClass()</code>结果为true</p>
+</li>
+<li><p><code>x.clone().equals(x)</code>结果为true</p>
+</li>
+<li><p>按照约定，这个方法应该通过调用<code>super.clone</code>获得。</p>
+<p>如果类及其超类（Object除外）遵守这一约定=&gt;<code>x.clone().getClass()==x.getClass()</code></p>
+</li>
+<li><p>返回的对象应该不依赖于被克隆的对象。</p>
+<p>为成功实现这种独立性，可能需要在<code>super.clone</code>之前修改对象的一个或多个域</p>
+</li>
+</ul>
+<p>如果类的clone方法返回的实例不是通过<code>super.clone</code>获得，而是通过构造器获得，编译器就不会发出警告，但是该类的子类调用了<code>super.clone</code>，得到对象就会拥有错误得类，并阻止clone方法得子类正常工作。</p>
+<p>如果final类得clone方法没有调用<code>super.clone</code>，这个类就没有必要实现Cloneable接口，因为它不依赖于Object克隆实现行为。</p>
+<p>假设在一个类中实现Cloneable接口，且它的超类都提供了行为良好得clone方法。</p>
+<ul>
+<li>首先调用<code>super.clone</code><ul>
+<li>由此得到原始对象功能完整得克隆</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>注意</p>
+<p><strong>不可变类永远都不应提供clone方法</strong></p>
+</blockquote>
+<h2 id="14考虑实现Comparable"><a href="#14考虑实现Comparable" class="headerlink" title="14考虑实现Comparable"></a>14考虑实现Comparable</h2>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2021/03/28/%E5%AF%B9%E6%89%80%E6%9C%89%E5%AF%B9%E8%B1%A1%E9%80%9A%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95/" title="通用方法" target="_blank" rel="external">http://example.com/2021/03/28/%E5%AF%B9%E6%89%80%E6%9C%89%E5%AF%B9%E8%B1%A1%E9%80%9A%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/hs-jose" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/hs-jose" target="_blank"><span class="text-dark">hs</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2021/03/28/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/" title="垃圾收集器与内存分配策略"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2021/03/28/%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/" title="创建和销毁对象"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="Catalogue" role="button">
+        <span>[&nbsp;</span><span>Catalogue</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/hs-jose" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

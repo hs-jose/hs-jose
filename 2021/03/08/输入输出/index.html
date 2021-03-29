@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang=ch>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>输入输出 | Hesai&#39;s Blog</title>
+  <meta name="description" content="输入输出本章介绍用于输入和输出的各种应用编程接口 如何访问文件与目录 如何以二进制和文本格式读写数据 输入&#x2F;输出流java API中  可向其中读入一个字节序列的对象称为输入流 可向其中写入一个字节序列的对象称为输出流  字节序列来源、目的地  文件 网络连接 内存块等  抽象类InputStream和OutputStream构成输入输出类层次结构的基础  这里的输入输出流与前一章的流不是一个概念">
+<meta property="og:type" content="article">
+<meta property="og:title" content="输入输出">
+<meta property="og:url" content="http://example.com/2021/03/08/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/index.html">
+<meta property="og:site_name" content="Hesai&#39;s blog">
+<meta property="og:description" content="输入输出本章介绍用于输入和输出的各种应用编程接口 如何访问文件与目录 如何以二进制和文本格式读写数据 输入&#x2F;输出流java API中  可向其中读入一个字节序列的对象称为输入流 可向其中写入一个字节序列的对象称为输出流  字节序列来源、目的地  文件 网络连接 内存块等  抽象类InputStream和OutputStream构成输入输出类层次结构的基础  这里的输入输出流与前一章的流不是一个概念">
+<meta property="og:locale">
+<meta property="og:image" content="e:/学习资料/笔记/java核心卷Ⅱ/image-20210308111039792.png">
+<meta property="og:image" content="e:/学习资料/笔记/java核心卷Ⅱ/image-20210308111242016.png">
+<meta property="og:image" content="e:/学习资料/笔记/java核心卷Ⅱ/image-20210308111311909.png">
+<meta property="og:image" content="e:/学习资料/笔记/java核心卷Ⅱ/image-20210308112333078.png">
+<meta property="article:published_time" content="2021-03-08T10:34:42.953Z">
+<meta property="article:modified_time" content="2021-03-28T15:42:40.941Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="tags">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="e:/学习资料/笔记/java核心卷Ⅱ/image-20210308111039792.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://example.com/2021/03/08/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hesai&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/hs-jose" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">hs</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/hs-jose" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>记录知识</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-%E2%85%A0/">Java核心技术 Ⅰ</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-%E2%85%A1/">Java核心技术 Ⅱ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E2%85%A0-%E6%B7%BB%E5%8A%A0%E5%8D%9A%E6%96%87%E5%88%86%E7%B1%BB/">Java核心技术Ⅰ# 添加博文分类</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E2%85%A1/">Java核心技术Ⅱ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/effective-Java/">effective Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/">深入理解JVM</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/tags/" rel="tag">tags</a><span class="tag-list-count">13</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/tags/" style="font-size: 13px;">tags</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/">深入理解JVM</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/" class="title">Java内存区域与内存溢出异常</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:25.905Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/">深入理解JVM</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/" class="title">垃圾收集器与内存分配策略</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:25.905Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/effective-Java/">effective Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%AF%B9%E6%89%80%E6%9C%89%E5%AF%B9%E8%B1%A1%E9%80%9A%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95/" class="title">通用方法</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:16.515Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/effective-Java/">effective Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/" class="title">创建和销毁对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:16.515Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E2%85%A0-%E6%B7%BB%E5%8A%A0%E5%8D%9A%E6%96%87%E5%88%86%E7%B1%BB/">Java核心技术Ⅰ# 添加博文分类</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%BC%82%E5%B8%B8%E3%80%81%E6%96%AD%E8%A8%80%E5%92%8C%E6%97%A5%E5%BF%97/" class="title">异常、断言和日志</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:01.868Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">Catalogue</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA"><span class="toc-number">1.</span> <span class="toc-text">输入输出</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5-%E8%BE%93%E5%87%BA%E6%B5%81"><span class="toc-number">1.1.</span> <span class="toc-text">输入&#x2F;输出流</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%86%99%E5%AD%97%E8%8A%82"><span class="toc-number">1.1.1.</span> <span class="toc-text">读写字节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E7%9A%84%E6%B5%81%E5%AE%B6%E6%97%8F"><span class="toc-number">1.1.2.</span> <span class="toc-text">完整的流家族</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E5%90%88%E8%BE%93%E5%85%A5-%E8%BE%93%E5%87%BA%E6%B5%81%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">1.1.3.</span> <span class="toc-text">组合输入&#x2F;输出流过滤器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E8%BE%93%E5%85%A5%E4%B8%8E%E8%BE%93%E5%87%BA"><span class="toc-number">1.1.4.</span> <span class="toc-text">文本输入与输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BA%E6%96%87%E6%9C%AC%E8%BE%93%E5%87%BA"><span class="toc-number">1.1.5.</span> <span class="toc-text">如何写出文本输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%AF%BB%E5%85%A5%E6%96%87%E6%9C%AC%E8%BE%93%E5%85%A5"><span class="toc-number">1.1.6.</span> <span class="toc-text">如何读入文本输入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E6%A0%BC%E5%BC%8F%E5%AD%98%E5%82%A8%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.7.</span> <span class="toc-text">文本格式存储对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.8.</span> <span class="toc-text">字符编码方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%86%99%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E6%8D%AE"><span class="toc-number">1.2.</span> <span class="toc-text">读写二进制数据</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DataInput%E5%92%8CDataOutput%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.2.1.</span> <span class="toc-text">DataInput和DataOutput接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E8%AE%BF%E9%97%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.2.</span> <span class="toc-text">随机访问文件</span></a></li></ol></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-输入输出" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      输入输出
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/03/08/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/" class="article-date">
+	  <time datetime="2021-03-08T10:34:42.953Z" itemprop="datePublished">2021-03-08</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E2%85%A1/">Java核心技术Ⅱ</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/tags/" rel="tag">tags</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/03/08/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="输入输出"><a href="#输入输出" class="headerlink" title="输入输出"></a>输入输出</h1><p>本章介绍用于输入和输出的各种应用编程接口</p>
+<p>如何访问文件与目录</p>
+<p>如何以二进制和文本格式读写数据</p>
+<h2 id="输入-输出流"><a href="#输入-输出流" class="headerlink" title="输入/输出流"></a>输入/输出流</h2><p>java API中</p>
+<ul>
+<li>可向其中读入一个字节序列的对象称为<strong>输入流</strong></li>
+<li>可向其中写入一个字节序列的对象称为<strong>输出流</strong></li>
+</ul>
+<p>字节序列来源、目的地</p>
+<ul>
+<li>文件</li>
+<li>网络连接</li>
+<li>内存块等</li>
+</ul>
+<p>抽象类<code>InputStream和OutputStream</code>构成输入输出类层次结构的基础</p>
+<blockquote>
+<p>这里的输入输出流与前一章的流不是一个概念</p>
+</blockquote>
+<h3 id="读写字节"><a href="#读写字节" class="headerlink" title="读写字节"></a>读写字节</h3><ul>
+<li><code>InputStream</code>类有一个抽象方法</li>
+</ul>
+<p><code>abstract int read()</code> 读入一个字节，并返回这个字节，或遇到输入源结尾时返回-1。</p>
+<p>设计具体输入流类时，覆盖以提供适当功能。</p>
+<p>除此还有<code>readAllBytes</code>读取流中所有字节等方便的方法，也是调用抽象<code>read</code>方法实现</p>
+<ul>
+<li><code>OutputStream</code>类有一个抽象方法</li>
+</ul>
+<p><code>abstract void write()</code> 向某个输出位置写出一个字节。</p>
+<p><code>transferTo</code>方法可以将所有字节从一个输入流传递到一个输出流</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">in.transferTo(out);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>read</code>和<code>write</code>执行时都将被<strong>堵塞</strong>，直到字节确实被读入和写出。</p>
+<p>意味着流如果不能被立即访问，当前线程将被堵塞</p>
+<p><code>available</code>方法可以检查当前可读入字节数量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> bytesAvaliable = in.avaliable();</span><br><span class="line"><span class="keyword">if</span>(bytesAvaliable&gt;<span class="number">0</span>)&#123;</span><br><span class="line">	<span class="keyword">var</span> data = <span class="keyword">new</span> <span class="keyword">byte</span>[bytesAvaliable];</span><br><span class="line">    in.read(data);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//不会堵塞</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>完成输入输出流读写操作时，应调用close方法关闭</strong>，否则资源可能耗尽</p>
+<p>输出流关闭时还会冲刷用于该流的缓冲区：所有被临时置于缓冲区中，以便用更大包的形式传递的字节在关闭输出流时会被送出。如果不关闭文件写出字节的最后一个包可能永远得不到传递。（flush手动冲刷这些输出）</p>
+<p>可以使用众多构建与基本的<code>InputStream和OutputStream</code>类之上的某个输入输出类，而不是只用字节</p>
+<h3 id="完整的流家族"><a href="#完整的流家族" class="headerlink" title="完整的流家族"></a>完整的流家族</h3><img src="E:\学习资料\笔记\java核心卷Ⅱ\image-20210308111039792.png" alt="image-20210308111039792" style="zoom: 67%;" />
+
+<p><img src="E:\学习资料\笔记\java核心卷Ⅱ\image-20210308111242016.png" alt="image-20210308111242016"></p>
+<p>输入输出流层次结构<del>处理字节</del></p>
+<img src="E:\学习资料\笔记\java核心卷Ⅱ\image-20210308111311909.png" alt="image-20210308111311909" style="zoom:80%;" />
+
+<p>Reader和Writer层次结构<del>处理字符</del></p>
+<p>Reader和Writer基本方法和输入输出流类似</p>
+<p>4个附加接口</p>
+<p><code>Closeable</code> </p>
+<p>​    <code>void close() throws IOException</code></p>
+<p><code>Flushable</code></p>
+<p>​    <code>void flush()</code></p>
+<p> <code>Readable Appendable</code></p>
+<img src="E:\学习资料\笔记\java核心卷Ⅱ\image-20210308112333078.png" alt="image-20210308112333078" style="zoom:80%;" />
+
+<h3 id="组合输入-输出流过滤器"><a href="#组合输入-输出流过滤器" class="headerlink" title="组合输入/输出流过滤器"></a>组合输入/输出流过滤器</h3><p><code>FileInputStream</code>和<code>FileOutputStream</code>提供一个附着在磁盘文件上的输入输出流</p>
+<blockquote>
+<p>所有在<code>java.io</code>中的类都将相对路径解释为以用户工作目录开始</p>
+<p><code>System.getProperty(&quot;user.dir&quot;);</code>获得</p>
+<p><code>java.io.File.separator</code>可以获得程序运行平台的文件分割符，对可移植程序很有用</p>
+</blockquote>
+<p><code>DataInputStream</code>只能读入数值类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DataInputStream din=...;</span><br><span class="line"><span class="keyword">double</span> x = din.readDouble();</span><br></pre></td></tr></table></figure>
+
+<p>和<code>FileInputStream</code>没有读入数值类型的方法一样，<code>DataInputStream</code>没有从文件获取数据的方法</p>
+<p>必要时必须对输入输出流进行组合</p>
+<p>例如 从文件读取数值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var fin &#x3D; new FileInputStream(&quot;employee.dat&quot;);</span><br><span class="line">var din &#x3D; new DataInputStream(fin);</span><br><span class="line">double x &#x3D; din.readDouble();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以通过嵌套过滤器来添加多重功能</p>
+<p>例如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> din = <span class="keyword">new</span> DataInputStream(</span><br><span class="line"><span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInpurStream(<span class="string">&quot;123.dat&quot;</span>)));<span class="comment">//缓冲机制用于文件的数据读入方法</span></span><br><span class="line"><span class="comment">//输入流默认下不缓冲</span></span><br></pre></td></tr></table></figure>
+
+<p>多个输入流链接在一起时，需要跟踪各个中介输入流</p>
+<p>例如</p>
+<p>读入输入时，常需要预览下一个字节。<code>java</code>提供<code>PushbackInputStream</code>实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pbin = <span class="keyword">new</span> PushbackInputStream(</span><br><span class="line"><span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">&quot;123.dat&quot;</span>)));</span><br><span class="line"><span class="keyword">int</span> b = pbin.read();<span class="comment">//预读下一个字节</span></span><br><span class="line"><span class="keyword">if</span>(b!=<span class="string">&#x27;&lt;&#x27;</span>) pbin.unread();<span class="comment">//在它并非期望值时推回流中</span></span><br></pre></td></tr></table></figure>
+
+<p>读入和推回时可应用于可回推（pushback）输入流<strong>仅有</strong>的方法</p>
+<p>如果需要既能预先浏览还能读入数字，就需要一个既时可回推输入流，又是数据输入流的引用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PushbackInputStream pbin;</span><br><span class="line"><span class="keyword">var</span> din = <span class="keyword">new</span> DataInputStream(</span><br><span class="line">	pbin = <span class="keyword">new</span> PushbackInputStream(</span><br><span class="line">		<span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">&quot;123.dat&quot;</span>))));</span><br></pre></td></tr></table></figure>
+
+
+
+<p>java中必须将多个流过滤器组合起来。</p>
+<p>这种混合匹配过滤器类以构建真正有用的输入输出流序列的能力，会很灵活。</p>
+<h3 id="文本输入与输出"><a href="#文本输入与输出" class="headerlink" title="文本输入与输出"></a>文本输入与输出</h3><p>再保存数据时可以选择二进制格式或文本格式。</p>
+<p>二进制IO高速高效，但不适合人阅读</p>
+<p>存储文本字符串时，需要考虑字符编码方式。</p>
+<blockquote>
+<p>java内部使用UTF-16编码</p>
+</blockquote>
+<p><code>OutputStreamWriter</code>类将使用选定的字符编码方式，将Unicode码元的输出流转换为字节流 </p>
+<p><code>InputStreamWriter</code>类将包含字节（某种字符编码方式表示的字符）的输入流转换为可产生Unicode码元的读入器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> in = <span class="keyword">new</span> InputStreamReader(System.in);<span class="comment">//输入读入器从控制台读入信息  假定使用主机系统的默认字符编码方式</span></span><br><span class="line"><span class="keyword">var</span> in = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(<span class="string">&quot;data.txt&quot;</span>),StandardCharsets.UTF_8);<span class="comment">//构造器选择具体编码方式</span></span><br></pre></td></tr></table></figure>
+
+<p>Reader和Writer类都只有读入和写出单个字符的基础方法。使用流时，可是使用处理字符串和数字的子类</p>
+<h3 id="如何写出文本输出"><a href="#如何写出文本输出" class="headerlink" title="如何写出文本输出"></a>如何写出文本输出</h3><p>文本输出可以使用<code>PrintWriter</code>，这个类有以文本格式打印字符串的文字和方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> out = <span class="keyword">new</span> PrintWriter(<span class="string">&quot;employee.txt&quot;</span>,StardardCharsets.UTF_8);</span><br><span class="line"></span><br><span class="line">String name = <span class="string">&quot;Harry&quot;</span>;</span><br><span class="line"><span class="keyword">double</span> salary = <span class="number">20000</span>;</span><br><span class="line">out.print(name);</span><br><span class="line">out.print(<span class="string">&quot; &quot;</span>);</span><br><span class="line">out.print(salary);</span><br><span class="line"><span class="comment">//字符串Harry 20000打印到文件employee.txt中</span></span><br></pre></td></tr></table></figure>
+
+<p>输出到写出器out，之后这些字符会被转换成字节并最终写入employee.txt中</p>
+<blockquote>
+<p>println打印完成后在行尾添加系统恰当的行结束符 Windows ‘\r\n’ ；UNIX ‘/n/’</p>
+<p><code>System.getroperty(&quot;line.separator&quot;);</code></p>
+</blockquote>
+<p>如果写出器为自动冲刷模式，只要println被调用缓冲区所有字符都会发送到它们目的地（打印写出器总是带缓冲区）。</p>
+<p>默认情况下自动冲刷机制是禁用的。</p>
+<p><code>PrintWriter(Writer writer,boolean autoFulsh)</code>可控制自动冲刷</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> out = <span class="keyword">new</span> PrintWriter(</span><br><span class="line">	<span class="keyword">new</span> OutputStreamWrite(</span><br><span class="line">		<span class="keyword">new</span> FileOutputStream(<span class="string">&quot;employee.txt&quot;</span>),StandardCharsets.UTF_8),<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+
+<p>print方法不抛出异常，你可以调用checkError方法来查看输出流是否出现了某些错误。</p>
+<blockquote>
+<p>现在PrintStream类在内部采用于PrintWrite相同方法将unicode字符转换为默认的主机编码方式</p>
+<p>PrintStream类型的对象使用print和println时，行为很像打印写出器，但是不同的是它们允许write(int)和write(byte[])方法输出原生字节</p>
+</blockquote>
+<h3 id="如何读入文本输入"><a href="#如何读入文本输入" class="headerlink" title="如何读入文本输入"></a>如何读入文本输入</h3><p>最简单处理任意文本方式是Scanner类。</p>
+<p>可以从任何输入流中构建Scanner对象</p>
+<p>小文本也可直接读入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> contant = (Files.read String path,charset);</span><br></pre></td></tr></table></figure>
+
+<p>逐行读入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; lines &#x3D; Files.readAllLines(path,charset);</span><br></pre></td></tr></table></figure>
+
+<p>如果文件太大，可将行惰性处理为一个<code>Stream&lt;String&gt;</code>对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">try(Stream&lt;String&gt; lines &#x3D; File.lines(path,charset))&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以使用扫描器来读入符号（token），即由分隔符分隔的字符串</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Scanner in = ...;</span><br><span class="line">in.useDelimiter(<span class="string">&quot;\\PL+&quot;</span>);<span class="comment">//任何非Unicode字母作为分割符</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(in.hasNext())&#123;</span><br><span class="line">    String word = in.next();</span><br><span class="line">&#125;<span class="comment">//获取下一个符号</span></span><br><span class="line"></span><br><span class="line">Stream&lt;String&gt; words = in.tokens();<span class="comment">//包含所有符号的流</span></span><br></pre></td></tr></table></figure>
+
+<p>早期java中，处理文本输入的唯一方式是通过BufferedReader类，它的readline方法会产生一行文本，或在无法获得更多输入时放回null</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">InputStream inputStream = ...;</span><br><span class="line"><span class="keyword">try</span>(<span class="keyword">var</span> in = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(inputStream,charset)))&#123;</span><br><span class="line">	String line;</span><br><span class="line">	<span class="keyword">while</span>((line=in.readLine())!=<span class="keyword">null</span>)&#123;</span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在buffered类加入了lines方法，可以产生一个<code>Stream&lt;String&gt;</code>对象。与Scanner不同，BufferedReader，欸有任何用于读入数字的方法</p>
+<h3 id="文本格式存储对象"><a href="#文本格式存储对象" class="headerlink" title="文本格式存储对象"></a>文本格式存储对象</h3><p>例如</p>
+<p>将employee记录数组存储成一个文本文件。每条记录单独保存为一行，实例字段用分割符隔开（竖线|，冒号：。。。）</p>
+<p>写出记录到文本文件中，<code>PrintWriter</code>类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">writeEmployee</span><span class="params">(PrintWriter out,Employee e)</span></span>&#123;</span><br><span class="line">	out.println(e.getName()+<span class="string">&quot;|&quot;</span>+e.getSalary()+<span class="string">&quot;|&quot;</span>+e.getHireDay()+<span class="string">&quot;|&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//读入记录</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Employee <span class="title">readEmployee</span><span class="params">(Scanner in)</span></span>&#123;</span><br><span class="line">	String line = in.nextLine();</span><br><span class="line">	String[] tokens = line.split(<span class="string">&quot;\\|&quot;</span>);</span><br><span class="line">	String name = tokens[<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">double</span> salary = Double.parseDouble(tokens[<span class="number">1</span>]);</span><br><span class="line">	LocalDate hireDay = LocalDate.parse(tokens[<span class="number">2</span>]);</span><br><span class="line">	<span class="keyword">int</span> year = hireDay.getYear();</span><br><span class="line">	<span class="keyword">int</span> month = hireDay.getMonthValue();</span><br><span class="line">	<span class="keyword">int</span> day = hireDay.getDay();</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> Employee(name,salary,year,month,day);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>..</p>
+<h3 id="字符编码方式"><a href="#字符编码方式" class="headerlink" title="字符编码方式"></a>字符编码方式</h3><p> 输入输出流都是用于字节序列，如果希望操作文本（字符序列），字符如何编码成字节是一个问题</p>
+<p>java字符使用Unicode标准。每个字符或“编码点”都具有21位的整数。有多种不同的字符编码方式，即将21位数字包装成字节有多种。</p>
+<p>最常见UTF-8，它会将每个Unicode编码点编码为1-4个字节的序列。</p>
+<p>UTF-16，会将Unicode编码点编码为1个或2个16位值。这是一种在java字符串中使用的编码方式。实际上有两种形式 高位优先、低位优先。文件可以字节顺序标记开头，来确定字节顺序</p>
+<p>ISO 8859-1是一种单字节编码，包含西欧各种语言中用到带有重音符号的字符</p>
+<p>Shift-JIS是一种用于日文字符的可变长编码</p>
+<p>不存在任何可靠方式可以自动探测出字节流中所使用的字符编码方式。</p>
+<blockquote>
+<p>平台使用的编码方式可以用静态方法<code>Charset.defaultCharset</code>返回</p>
+<p><code>Charset.availableCharsets</code> 会返回所有可用的Charset实例，返回结果是一个从字符集规范名称到Charset对象的映射表</p>
+</blockquote>
+<p><code>StardardCharsets</code>类具有类型为<code>Charset</code>的静态变量，用于表示每种java虚拟机必须支持的字符编码方式</p>
+<p><code>StardardCharsets.UTF-8</code>、<code>StardardCharsets.UTF-16</code>、<code>StardardCharsets.UTF-16BE</code>、<code>StardardCharsets.UTF-16LE</code>、<code>StardardCharsets.ISO_8859_1</code>、<code>StardardCharsets.US_ASCII</code></p>
+<p>为获得另一种编码方式的Charset，可以使用静态方法forName</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Charset shiftJIS = Charset.forName(<span class="string">&quot;Shift_JIS&quot;</span>);</span><br><span class="line"><span class="comment">//读入或写出文本时 应该使用Charset对象 例如 字节数组转换为字符串</span></span><br><span class="line"><span class="keyword">var</span> str = <span class="keyword">new</span> String(bytes,StandardCharsets.UTF_8);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>java10中 <code>java.io</code>包中所有方法都允许用一个Charset对象或字符串来指定字符编码方式。应选择StandardCharsets常量避免拼写错误</p>
+</blockquote>
+<blockquote>
+<p>不指定任何编码方式时 有些方法（String(byte[])构造器）会使用默认哦ing他编码方式，而其他方法（Files.readAllLines)会使用UTF-8</p>
+</blockquote>
+<h2 id="读写二进制数据"><a href="#读写二进制数据" class="headerlink" title="读写二进制数据"></a>读写二进制数据</h2><p>二进制格式传递数据更高效</p>
+<h3 id="DataInput和DataOutput接口"><a href="#DataInput和DataOutput接口" class="headerlink" title="DataInput和DataOutput接口"></a><code>DataInput</code>和<code>DataOutput</code>接口</h3><p><code>DateOutput</code>定义下面用于二进制格式写数组、字符、boolean值和字符串方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">writeChars writeFloat writeByte writeDouble writeInt writeChar writeShort writeBoolean writeLong writeUTF</span><br></pre></td></tr></table></figure>
+
+<p>例如 <code>writeInt</code>总是将一个整数写出为4字节的二进制数量值，不管有多少位。<code>writeDouble</code>总是将一个double值写出为8个字节的二进制数量值。</p>
+<p>这样对于给定类型的每个值，使用空间都是相同的，读回时比解析文本要快</p>
+<p><code>writeUTF</code>方法使用修订版8位Unicode转换格式写出字符串。这种方法与直接使用标准UTF-8编码方式不同，Unicode码元序列首先用UTF-16表示，其结果之后用UTF-8规则进行编码。修订后的编码方式对于编码大于0xFFFF的字符处理有所不同，为了向后兼容Unicode还没有超过16位时构建的虚拟机</p>
+<p><strong>因为没有其他方法会使用UTF-8这种修订，所以应该只在写出用于java虚拟机的字符串才使用writeUTF方法</strong></p>
+<p><code>DataInput</code>定义用于读回数据的方法</p>
+<p><code>DataInputStream</code>类实现了<code>DataInput</code>接口，为了从文件读入二进制数可以将<code>DataInputStream</code>于某个字节源结合</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> in = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">&quot;employee.dat&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>类似写出二进制数据可用实现了<code>DataOutput</code>的<code>DataOutputStream</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> out = <span class="keyword">new</span> DataOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">&quot;employee.dat&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h3 id="随机访问文件"><a href="#随机访问文件" class="headerlink" title="随机访问文件"></a>随机访问文件</h3><p><code>RandomAccessFile</code>类可以在文件中任何位置查找或写入数据</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2021/03/08/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/" title="输入输出" target="_blank" rel="external">http://example.com/2021/03/08/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/hs-jose" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/hs-jose" target="_blank"><span class="text-dark">hs</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2021/03/28/%E9%AB%98%E7%BA%A7%E6%A0%91/" title="高级树"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2021/02/17/Java8%E7%9A%84%E6%B5%81%E5%BA%93/" title="Java8的流库"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="Catalogue" role="button">
+        <span>[&nbsp;</span><span>Catalogue</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/hs-jose" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

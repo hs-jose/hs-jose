@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang=ch>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>高级树 | Hesai&#39;s Blog</title>
+  <meta name="description" content="B树一种多路平衡查找树。  每个节点最多有m-1个关键字（可以有键值对） 根节点最少只可以有1个关键字 非根节点至少有m&#x2F;2个关键字 每个节点中关键字升序排列，其左子树所有关键字均小于父节点对应值，而右子树中所有关键字均大于父节点对应值 所有叶子节点都位于同一层 每个节点都存有索引和数据 根节点至少两个子树  根节点的关键字数量范围：1 &lt;&#x3D; k &lt;&#x3D; m-1，非根节点的关键字数量范围">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高级树">
+<meta property="og:url" content="http://example.com/2021/03/28/%E9%AB%98%E7%BA%A7%E6%A0%91/index.html">
+<meta property="og:site_name" content="Hesai&#39;s blog">
+<meta property="og:description" content="B树一种多路平衡查找树。  每个节点最多有m-1个关键字（可以有键值对） 根节点最少只可以有1个关键字 非根节点至少有m&#x2F;2个关键字 每个节点中关键字升序排列，其左子树所有关键字均小于父节点对应值，而右子树中所有关键字均大于父节点对应值 所有叶子节点都位于同一层 每个节点都存有索引和数据 根节点至少两个子树  根节点的关键字数量范围：1 &lt;&#x3D; k &lt;&#x3D; m-1，非根节点的关键字数量范围">
+<meta property="og:locale">
+<meta property="og:image" content="e:/学习资料/笔记/数据结构/高级树/avl树ll.png">
+<meta property="og:image" content="e:/学习资料/笔记/数据结构/高级树/avl树rr.png">
+<meta property="og:image" content="e:/学习资料/笔记/数据结构/高级树/avl树LR.png">
+<meta property="og:image" content="e:/学习资料/笔记/数据结构/高级树/avl树rl.png">
+<meta property="article:published_time" content="2021-03-28T15:03:41.119Z">
+<meta property="article:modified_time" content="2021-03-28T15:40:53.853Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="tags">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="e:/学习资料/笔记/数据结构/高级树/avl树ll.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://example.com/2021/03/28/%E9%AB%98%E7%BA%A7%E6%A0%91/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hesai&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/hs-jose" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">hs</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/hs-jose" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>记录知识</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-%E2%85%A0/">Java核心技术 Ⅰ</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-%E2%85%A1/">Java核心技术 Ⅱ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E2%85%A0-%E6%B7%BB%E5%8A%A0%E5%8D%9A%E6%96%87%E5%88%86%E7%B1%BB/">Java核心技术Ⅰ# 添加博文分类</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E2%85%A1/">Java核心技术Ⅱ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/effective-Java/">effective Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/">深入理解JVM</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/tags/" rel="tag">tags</a><span class="tag-list-count">13</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/tags/" style="font-size: 13px;">tags</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/">深入理解JVM</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/" class="title">Java内存区域与内存溢出异常</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:25.905Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/">深入理解JVM</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/" class="title">垃圾收集器与内存分配策略</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:25.905Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/effective-Java/">effective Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%AF%B9%E6%89%80%E6%9C%89%E5%AF%B9%E8%B1%A1%E9%80%9A%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95/" class="title">通用方法</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:16.515Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/effective-Java/">effective Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/" class="title">创建和销毁对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:16.515Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E2%85%A0-%E6%B7%BB%E5%8A%A0%E5%8D%9A%E6%96%87%E5%88%86%E7%B1%BB/">Java核心技术Ⅰ# 添加博文分类</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/28/%E5%BC%82%E5%B8%B8%E3%80%81%E6%96%AD%E8%A8%80%E5%92%8C%E6%97%A5%E5%BF%97/" class="title">异常、断言和日志</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-28T15:05:01.868Z" itemprop="datePublished">2021-03-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">Catalogue</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#B%E6%A0%91"><span class="toc-number">1.</span> <span class="toc-text">B树</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E5%85%A5"><span class="toc-number">1.1.</span> <span class="toc-text">插入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">1.2.</span> <span class="toc-text">删除</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#B-%E6%A0%91"><span class="toc-number">2.</span> <span class="toc-text">B+树</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E5%85%A5-1"><span class="toc-number">2.1.</span> <span class="toc-text">插入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4-1"><span class="toc-number">2.2.</span> <span class="toc-text">删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">2.3.</span> <span class="toc-text">特点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="toc-number">3.</span> <span class="toc-text">红黑树</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AVL%E6%A0%91"><span class="toc-number">4.</span> <span class="toc-text">AVL树</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84"><span class="toc-number">4.1.</span> <span class="toc-text">层级结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC"><span class="toc-number">4.2.</span> <span class="toc-text">旋转</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%90%91%E5%8F%B3%E6%97%8B"><span class="toc-number">4.2.1.</span> <span class="toc-text">单向右旋</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%90%91%E5%B7%A6%E6%97%8B"><span class="toc-number">4.2.2.</span> <span class="toc-text">单向左旋</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E5%90%91%E6%97%8B%E8%BD%AC"><span class="toc-number">4.2.3.</span> <span class="toc-text">双向旋转</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%88%E5%B7%A6%E5%90%8E%E5%8F%B3"><span class="toc-number">4.2.3.1.</span> <span class="toc-text">先左后右</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%88%E5%8F%B3%E5%90%8E%E5%B7%A6"><span class="toc-number">4.2.3.2.</span> <span class="toc-text">先右后左</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E5%85%A5-2"><span class="toc-number">4.3.</span> <span class="toc-text">插入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4-2"><span class="toc-number">4.4.</span> <span class="toc-text">删除</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%8F%B6%E5%AD%90%E7%BB%93%E7%82%B9%E3%80%82%E6%93%8D%E4%BD%9C%EF%BC%9A%E7%9B%B4%E6%8E%A5%E5%88%A0%E9%99%A4%EF%BC%8C%E7%84%B6%E5%90%8E%E4%BE%9D%E6%AC%A1%E5%90%91%E4%B8%8A%E8%B0%83%E6%95%B4%E4%B8%BAAVL%E6%A0%91%E3%80%82"><span class="toc-number">4.4.1.</span> <span class="toc-text">删除叶子结点。操作：直接删除，然后依次向上调整为AVL树。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E9%9D%9E%E5%8F%B6%E5%AD%90%E8%8A%82%E7%82%B9%EF%BC%8C%E8%AF%A5%E8%8A%82%E7%82%B9%E5%8F%AA%E6%9C%89%E5%B7%A6%E5%AD%A9%E5%AD%90%E3%80%82%E6%93%8D%E4%BD%9C%EF%BC%9A%E8%AF%A5%E8%8A%82%E7%82%B9%E7%9A%84%E5%80%BC%E6%9B%BF%E6%8D%A2%E4%B8%BA%E5%B7%A6%E5%AD%A9%E5%AD%90%E8%8A%82%E7%82%B9%E7%9A%84%E5%80%BC%EF%BC%8C%E7%84%B6%E5%90%8E%E5%88%A0%E9%99%A4%E5%B7%A6%E5%AD%A9%E5%AD%90%E8%8A%82%E7%82%B9%E3%80%82"><span class="toc-number">4.4.2.</span> <span class="toc-text">删除非叶子节点，该节点只有左孩子。操作：该节点的值替换为左孩子节点的值，然后删除左孩子节点。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E9%9D%9E%E5%8F%B6%E5%AD%90%E8%8A%82%E7%82%B9%EF%BC%8C%E8%AF%A5%E8%8A%82%E7%82%B9%E5%8F%AA%E6%9C%89%E5%8F%B3%E5%AD%A9%E5%AD%90%E3%80%82%E6%93%8D%E4%BD%9C%EF%BC%9A%E8%AF%A5%E8%8A%82%E7%82%B9%E7%9A%84%E5%80%BC%E6%9B%BF%E6%8D%A2%E4%B8%BA%E5%8F%B3%E5%AD%A9%E5%AD%90%E8%8A%82%E7%82%B9%E7%9A%84%E5%80%BC%EF%BC%8C%E7%84%B6%E5%90%8E%E5%88%A0%E9%99%A4%E5%8F%B3%E5%AD%A9%E5%AD%90%E8%8A%82%E7%82%B9%E3%80%82"><span class="toc-number">4.4.3.</span> <span class="toc-text">删除非叶子节点，该节点只有右孩子。操作：该节点的值替换为右孩子节点的值，然后删除右孩子节点。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E9%9D%9E%E5%8F%B6%E5%AD%90%E8%8A%82%E7%82%B9%EF%BC%8C%E8%AF%A5%E8%8A%82%E7%82%B9%E6%97%A2%E6%9C%89%E5%B7%A6%E5%AD%A9%E5%AD%90%EF%BC%8C%E5%8F%88%E6%9C%89%E5%8F%B3%E5%AD%A9%E5%AD%90%E3%80%82%E6%93%8D%E4%BD%9C%EF%BC%9A%E8%AF%A5%E8%8A%82%E7%82%B9%E7%9A%84%E5%80%BC%E6%9B%BF%E6%8D%A2%E4%B8%BA%E8%AF%A5%E8%8A%82%E7%82%B9%E7%9A%84%E5%89%8D%E9%A9%B1%E8%8A%82%E7%82%B9%EF%BC%88%E6%88%96%E8%80%85%E5%90%8E%E7%BB%A7%E8%8A%82%E7%82%B9%EF%BC%89%EF%BC%8C%E7%84%B6%E5%90%8E%E5%88%A0%E9%99%A4%E5%89%8D%E9%A9%B1%E8%8A%82%E7%82%B9%EF%BC%88%E6%88%96%E8%80%85%E5%90%8E%E7%BB%A7%E8%8A%82%E7%82%B9%EF%BC%89%E3%80%82"><span class="toc-number">4.4.4.</span> <span class="toc-text">删除非叶子节点，该节点既有左孩子，又有右孩子。操作：该节点的值替换为该节点的前驱节点（或者后继节点），然后删除前驱节点（或者后继节点）。</span></a></li></ol></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-高级树" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      高级树
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/03/28/%E9%AB%98%E7%BA%A7%E6%A0%91/" class="article-date">
+	  <time datetime="2021-03-28T15:03:41.119Z" itemprop="datePublished">2021-03-28</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/tags/" rel="tag">tags</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/03/28/%E9%AB%98%E7%BA%A7%E6%A0%91/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="B树"><a href="#B树" class="headerlink" title="B树"></a>B树</h1><p>一种多路平衡查找树。</p>
+<ul>
+<li>每个节点最多有m-1个关键字（可以有键值对）</li>
+<li>根节点最少只可以有1个关键字</li>
+<li>非根节点至少有m/2个关键字</li>
+<li>每个节点中关键字升序排列，其左子树所有关键字均小于父节点对应值，而右子树中所有关键字均大于父节点对应值</li>
+<li>所有叶子节点都位于同一层</li>
+<li>每个节点都存有索引和数据</li>
+<li>根节点至少两个子树</li>
+</ul>
+<p>根节点的<strong>关键字</strong>数量范围：<code>1 &lt;= k &lt;= m-1</code>，非根节点的<strong>关键字</strong>数量范围：<code>m/2 &lt;= k &lt;= m-1</code></p>
+<h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p><strong>判断当前结点key的个数是否小于等于m-1，如果满足，直接插入即可，如果不满足，将节点的中间的key将这个节点分为左右两部分，中间的节点放到父节点中，父节点满则继续分裂。</strong></p>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><h1 id="B-树"><a href="#B-树" class="headerlink" title="B+树"></a>B+树</h1><p>B+树其实和B树是非常相似</p>
+<p>相同点</p>
+<ul>
+<li>根节点至少一个元素</li>
+<li>非根节点元素范围：m/2 &lt;= k &lt;= m-1</li>
+</ul>
+<p>不同</p>
+<ul>
+<li>B+树有两种类型的节点：内部结点（也称索引结点）和叶子结点。内部节点就是非叶子节点，内部节点不存储数据，只存储索引，数据都存储在叶子节点。</li>
+<li>内部结点中的key都按照从小到大的顺序排列，对于内部结点中的一个key，左树中的所有key都小于它，右子树中的key都大于等于它。叶子结点中的记录也按照key的大小排列。</li>
+<li>每个叶子结点都存有相邻叶子结点的指针，叶子结点本身依关键字的大小自小而大顺序链接。</li>
+<li>父节点存有右孩子的第一个元素的索引</li>
+</ul>
+<h2 id="插入-1"><a href="#插入-1" class="headerlink" title="插入"></a>插入</h2><p><strong>当节点元素数量大于m-1的时候，按中间元素分裂成左右两部分，中间元素分裂到父节点当做索引存储，但是，本身中间元素还是分裂右边这一部分的</strong>。</p>
+<h2 id="删除-1"><a href="#删除-1" class="headerlink" title="删除"></a>删除</h2><p><strong>叶子节点有指针的存在，向兄弟节点借元素时，不需要通过父节点，而是可以直接通过兄弟节移动即可（前提是兄弟节点的元素大于m/2），然后更新父节点的索引；如果兄弟节点的元素不大于m/2（兄弟节点也没有多余的元素），则将当前节点和兄弟节点合并，并且删除父节点中的key</strong></p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p>1、B+树的层级更少：相较于B树B+每个非叶子节点存储的关键字数更多，树的层级更少所以查询数据更快；</p>
+<p>2、B+树查询速度更稳定：B+所有关键字数据地址都存在叶子节点上，所以每次查找的次数都相同所以查询速度要比B树更稳定;</p>
+<p>3、B+树天然具备排序功能：B+树所有的叶子节点数据构成了一个有序链表，在查询大小区间的数据时候更方便，数据紧密性很高，缓存的命中率也会比B树高。<br> 4、B+树全节点遍历更快：B+树遍历整棵树只需要遍历所有的叶子节点即可，，而不需要像B树一样需要对每一层进行遍历，这有利于数据库做全表扫描。</p>
+<p>B树相对于B+树的优点是，如果经常访问的数据离根节点很近，而B树的非叶子节点本身存有关键字其数据的地址，所以这种数据检索的时候会要比B+树快。</p>
+<h1 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h1><h1 id="AVL树"><a href="#AVL树" class="headerlink" title="AVL树"></a>AVL树</h1><p>平衡二叉树是基于二分法策略提高查找速度的二叉树</p>
+<p>AVL树采用二分法</p>
+<ul>
+<li>非叶子结点只能允许最多两个子节点</li>
+<li>每个非叶子结点数据为左子树小于当前结点值，右子树值大于当前结点值</li>
+<li>每个节点左右子树深度相差不超过1</li>
+<li>没有值相等重复的节点</li>
+</ul>
+<h2 id="层级结构"><a href="#层级结构" class="headerlink" title="层级结构"></a>层级结构</h2><p>平衡二叉树的查询性能与树的深度（h）成反比，而<strong>AVL树使左右子树的高度差不超过1</strong>，保证数据平衡。避免树退化成链表。</p>
+<h2 id="旋转"><a href="#旋转" class="headerlink" title="旋转"></a>旋转</h2><h3 id="单向右旋"><a href="#单向右旋" class="headerlink" title="单向右旋"></a>单向右旋</h3><p>单向右旋平衡处理LL：由于在<em>a的左子树根结点的左子树上插入结点，</em>a的平衡因子由1增至2，致使以*a为根的子树失去平衡，则需进行一次右旋转操作；</p>
+<p>不平衡的发现者，麻烦节点 在发现者的左子树的左边。需要LL旋转</p>
+<p><img src="E:\学习资料\笔记\数据结构\高级树\avl树ll.png" alt="avl树ll"></p>
+<h3 id="单向左旋"><a href="#单向左旋" class="headerlink" title="单向左旋"></a>单向左旋</h3><p>单向左旋平衡处理RR：由于在<em>a的右子树根结点的右子树上插入结点，</em>a的平衡因子由-1变为-2，致使以*a为根的子树失去平衡，则需进行一次左旋转操作；</p>
+<p>不平衡的发现者，麻烦节点 在发现者的右子树的右边。需要RR旋转</p>
+<p><img src="E:\学习资料\笔记\数据结构\高级树\avl树rr.png" alt="avl树rr"></p>
+<h3 id="双向旋转"><a href="#双向旋转" class="headerlink" title="双向旋转"></a>双向旋转</h3><h4 id="先左后右"><a href="#先左后右" class="headerlink" title="先左后右"></a>先左后右</h4><p>双向旋转（先左后右）平衡处理LR：由于在<em>a的左子树根结点的右子树上插入结点，</em>a的平衡因子由1增至2，致使以*a为根的子树失去平衡，则需进行两次旋转（先左旋后右旋）操作。</p>
+<p>不平衡的发现者，麻烦节点 在发现者的左子树的右边。需要LR旋转</p>
+<p><img src="E:\学习资料\笔记\数据结构\高级树\avl树LR.png" alt="avl树LR"></p>
+<h4 id="先右后左"><a href="#先右后左" class="headerlink" title="先右后左"></a>先右后左</h4><p>双向旋转（先右后左）平衡处理RL：由于在<em>a的右子树根结点的左子树上插入结点，</em>a的平衡因子由-1变为-2，致使以*a为根的子树失去平衡，则需进行两次旋转（先右旋后左旋）操作。</p>
+<p>不平衡的发现者，麻烦节点 在发现者的右子树的左边。需要RL旋转</p>
+<p><img src="E:\学习资料\笔记\数据结构\高级树\avl树rl.png" alt="avl树rl"></p>
+<h2 id="插入-2"><a href="#插入-2" class="headerlink" title="插入"></a>插入</h2><p>插入一个新节点时依次回溯检查是否满足平衡。有时插入元素不需要调整元素，但可能需要重新计算一些平衡因子。不满足条件的节点按照上述4种情况进行旋转</p>
+<h2 id="删除-2"><a href="#删除-2" class="headerlink" title="删除"></a>删除</h2><p>从AVL树中删除可以通过把要删除的节点向下旋转成一个叶子节点，接着直接剪除这个叶子节点来完成。因为在旋转成叶子节点期间最多有 log n个节点被旋转，而每次 AVL 旋转耗费恒定的时间，删除处理在整体上耗费 O(log n) 时间。</p>
+<p><strong>总结：对于非叶子节点的删除，最终都将转化为对叶子节点的删除。</strong></p>
+<p>删除节点的位置分为以下4类：</p>
+<h3 id="删除叶子结点。操作：直接删除，然后依次向上调整为AVL树。"><a href="#删除叶子结点。操作：直接删除，然后依次向上调整为AVL树。" class="headerlink" title="删除叶子结点。操作：直接删除，然后依次向上调整为AVL树。"></a>删除叶子结点。操作：直接删除，然后依次向上调整为AVL树。</h3><h3 id="删除非叶子节点，该节点只有左孩子。操作：该节点的值替换为左孩子节点的值，然后删除左孩子节点。"><a href="#删除非叶子节点，该节点只有左孩子。操作：该节点的值替换为左孩子节点的值，然后删除左孩子节点。" class="headerlink" title="删除非叶子节点，该节点只有左孩子。操作：该节点的值替换为左孩子节点的值，然后删除左孩子节点。"></a>删除非叶子节点，该节点只有左孩子。操作：该节点的值替换为左孩子节点的值，然后删除左孩子节点。</h3><h3 id="删除非叶子节点，该节点只有右孩子。操作：该节点的值替换为右孩子节点的值，然后删除右孩子节点。"><a href="#删除非叶子节点，该节点只有右孩子。操作：该节点的值替换为右孩子节点的值，然后删除右孩子节点。" class="headerlink" title="删除非叶子节点，该节点只有右孩子。操作：该节点的值替换为右孩子节点的值，然后删除右孩子节点。"></a>删除非叶子节点，该节点只有右孩子。操作：该节点的值替换为右孩子节点的值，然后删除右孩子节点。</h3><h3 id="删除非叶子节点，该节点既有左孩子，又有右孩子。操作：该节点的值替换为该节点的前驱节点（或者后继节点），然后删除前驱节点（或者后继节点）。"><a href="#删除非叶子节点，该节点既有左孩子，又有右孩子。操作：该节点的值替换为该节点的前驱节点（或者后继节点），然后删除前驱节点（或者后继节点）。" class="headerlink" title="删除非叶子节点，该节点既有左孩子，又有右孩子。操作：该节点的值替换为该节点的前驱节点（或者后继节点），然后删除前驱节点（或者后继节点）。"></a>删除非叶子节点，该节点既有左孩子，又有右孩子。操作：该节点的值替换为该节点的前驱节点（或者后继节点），然后删除前驱节点（或者后继节点）。</h3>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2021/03/28/%E9%AB%98%E7%BA%A7%E6%A0%91/" title="高级树" target="_blank" rel="external">http://example.com/2021/03/28/%E9%AB%98%E7%BA%A7%E6%A0%91/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/hs-jose" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/hs-jose" target="_blank"><span class="text-dark">hs</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2021/03/28/%E5%B9%B6%E5%8F%91/" title="并发"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2021/03/08/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/" title="输入输出"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="Catalogue" role="button">
+        <span>[&nbsp;</span><span>Catalogue</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/hs-jose" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
